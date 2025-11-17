@@ -15,10 +15,11 @@ namespace WebApplication1.Controllers
         public IActionResult Add()
         {
             // Shows the Add Employee page
-            return View();
+            return View(new AddEmployeeViewModel());
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(AddEmployeeViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -28,6 +29,7 @@ namespace WebApplication1.Controllers
                     Name = viewModel.Name,
                     Email = viewModel.Email,
                     Phone = viewModel.Phone,
+                    Department = viewModel.Department,
                     Idcard = viewModel.Idcard
                 };
 
@@ -48,9 +50,13 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(int id)
         {
             var emp = await dbContext.Employees.FindAsync(id);
+            if (emp is null)
+            {
+                return View(null);
+            }
             return View(emp);
         }
         [HttpPost]
@@ -72,11 +78,11 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(Employee viewModel)
         {
-            var emp = await dbContext.Employees.AsNoTracking().FirstOrDefaultAsync(x => x.Id == viewModel.Id);
+            var emp = await dbContext.Employees.FirstOrDefaultAsync(x => x.Id == viewModel.Id);
 
             if (emp is not null)
             {
-                dbContext.Employees.Remove(viewModel);
+                dbContext.Employees.Remove(emp);
                 await dbContext.SaveChangesAsync();
             }
             return RedirectToAction("List", "Employee");
