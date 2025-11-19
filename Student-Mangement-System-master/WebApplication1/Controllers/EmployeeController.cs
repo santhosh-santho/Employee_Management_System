@@ -11,6 +11,7 @@ namespace WebApplication1.Controllers
         {
             this.dbContext = dbContext;
         }
+
         [HttpGet]
         public IActionResult Add()
         {
@@ -42,6 +43,7 @@ namespace WebApplication1.Controllers
 
             return View(viewModel);
         }
+
         [HttpGet]
         public async Task<IActionResult> List()
         {
