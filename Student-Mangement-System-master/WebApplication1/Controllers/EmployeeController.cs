@@ -20,7 +20,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public async Task<IActionResult> Add(AddEmployeeViewModel viewModel)
         {
             if (ModelState.IsValid)
